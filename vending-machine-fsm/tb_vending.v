@@ -55,6 +55,15 @@ initial begin
     #20 in = 2'b10; // 10
     #10 in = 2'b10; // 10 -> vend + change
     #10 in = 2'b00;
+    
+    // Case 3: 5 + 5 + 5 = 15
+    #20 in = 2'b01;  // 5
+    #10 in = 2'b01;  // 5
+    #10 in = 2'b01;  // 5 -> vend
+    #10 in = 2'b00;
+
+
+
 
     #50 $stop;
 end
