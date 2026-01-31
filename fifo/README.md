@@ -12,7 +12,13 @@ This project implements a synchronous FIFO using Verilog.
 ## Files
 - `FIFO.v` – FIFO RTL
 - `tb_fifo.v` – Testbench
-- `waveform.png` – Simulation waveform
+- `wfs.png` – Simulation waveform
+- 
+## Simulation Waveform
+
+Below is the simulation waveform of the FIFO:
+
+![FIFO Waveform](wfs.png)
 
 ## Description
 The FIFO stores data in memory and outputs in the same order it was written.
