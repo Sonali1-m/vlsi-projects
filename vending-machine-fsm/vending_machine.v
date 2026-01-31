@@ -1,31 +1,11 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 24.01.2026 22:33:40
-// Design Name: 
-// Module Name: vending_machine
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
+`timescale 1ns/1ps
 
 module vending_machine (
     input clk,
     input reset,
-    input [1:0] in,        // 00=no coin, 01=5, 10=10
-    output reg out,       // product
-    output reg [1:0] change // 01=5, 10=10
+    input [1:0] in,
+    output reg out,
+    output reg [1:0] change
 );
 
 parameter S0  = 2'b00,
@@ -35,42 +15,49 @@ parameter S0  = 2'b00,
 
 reg [1:0] state, next;
 
+// 1) State register
 always @(posedge clk) begin
-    if(reset)
+    if (reset)
         state <= S0;
     else
         state <= next;
 end
 
+// 2) Next-state logic
 always @(*) begin
-    out = 0;
-    change = 2'b00;
     next = state;
-
-    case(state)
+    case (state)
         S0: begin
-            if(in == 2'b01) next = S5;
-            else if(in == 2'b10) next = S10;
+            if (in == 2'b01)      next = S5;
+            else if (in == 2'b10) next = S10;
         end
 
         S5: begin
-            if(in == 2'b01) next = S10;
-            else if(in == 2'b10) next = S15;
+            if (in == 2'b01)      next = S10;
+            else if (in == 2'b10) next = S15;
         end
 
         S10: begin
-            if(in == 2'b01) next = S15;
-            else if(in == 2'b10) begin
-                next = S15;
-                change = 2'b01; // return 5
-            end
+            if (in == 2'b01)      next = S15;
+            else if (in == 2'b10) next = S15;
         end
 
         S15: begin
-            out = 1;
-            next = S0;
+            next = S0;   // auto reset after vend
         end
     endcase
+end
+
+// 3) Output logic (Moore style)
+always @(*) begin
+    out = 0;
+    change = 2'b00;
+
+    if (state == S15)
+        out = 1;
+
+    if (state == S10 && in == 2'b10)
+        change = 2'b01; // return 5
 end
 
 endmodule
